@@ -23,6 +23,8 @@ const Cashier = ({ navigation }) => {
             marginTop: '10%',
             marginLeft: '4%',
         },
+        body: {
+        },
     };
 
     return (
@@ -31,6 +33,17 @@ const Cashier = ({ navigation }) => {
                 <TouchableOpacity onPress={navigateToHome}>
                     <Icon name="arrow-back-circle" size={35} color="black" />
                 </TouchableOpacity>
+                <View style={styles.body}>
+                    <View style={styles.body-header}>
+                    
+                    </View>
+                    <View style={styles.body-top}>
+
+                    </View>
+                    <View style={styles.body-bottom}>
+
+                    </View>
+                </View>
             </View>
         </View>
     );
