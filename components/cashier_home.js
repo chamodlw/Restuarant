@@ -2,6 +2,7 @@ import React from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Button } from 'react-native-paper';
+import Foods from './sub_components/foods';
 
 const Cashier = ({ navigation }) => {
     const navigateToHome = () => {
@@ -78,7 +79,7 @@ const Cashier = ({ navigation }) => {
                         </Button>
                     </View>
                     <View style={styles.body_top}>
-                        <Text>Top</Text>
+                        <Foods/> 
                     </View>
                     <View style={styles.body_bottom}>
                         <Text>Bottom</Text>
