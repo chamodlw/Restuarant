@@ -10,7 +10,7 @@ const Foods = () => {
             .get('http://10.10.27.146:3200/api/items')
             .then((response) => {
                 console.log('Fetched Data:', response.data); // Log the response data
-                setItems(response.data); // Set the fetched data to state
+                setItems(response.data.response); // Access the 'response' field to get the items
             })
             .catch((error) => {
                 console.error('Error fetching data:', error); // Log any errors
