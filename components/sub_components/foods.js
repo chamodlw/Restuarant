@@ -13,7 +13,7 @@ const Foods = () => {
                 setItems(response.data.response); // Access the 'response' field to get the items
             })
             .catch((error) => {
-                console.error('Error fetching data:', error); // Log any errors
+                console.error('Error fetching data:', error);
             });
     }, []);
 
