@@ -32,7 +32,7 @@ const Home = () => {
     const validateAndNavigate = () => {
         let isValid = false;
     
-        if (screenToNavigate === 'Cashier' && password === '12') {
+        if (screenToNavigate === 'Cashier' && password === 'As') {
             isValid = true;
         } else if (screenToNavigate === 'Owner' && username === 'chamod' && password === '9090') {
             isValid = true;
