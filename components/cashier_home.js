@@ -3,6 +3,7 @@ import { View, TouchableOpacity, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Button } from 'react-native-paper';
 import Foods from './sub_components/foods';
+import Selected from './sub_components/selected';
 
 const Cashier = ({ navigation }) => {
     const [selectedCategory, setSelectedCategory] = useState('All');
@@ -98,7 +99,7 @@ const Cashier = ({ navigation }) => {
                         <Foods category={selectedCategory}/> 
                     </View>
                     <View style={styles.body_bottom}>
-                        <Text>Bottom</Text>
+                        <Selected/>
                     </View>
                 </View>
             </View>
