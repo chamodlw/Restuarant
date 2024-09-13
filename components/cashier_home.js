@@ -1,10 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Button } from 'react-native-paper';
 import Foods from './sub_components/foods';
 
 const Cashier = ({ navigation }) => {
+    const [selectedCategory, setSelectedCategory] = useState('All');
+
+    // Function to handle category selection
+    const Click_Category = (category) => {
+        setSelectedCategory(category);
+        // You can add any additional logic here if needed for each category
+        console.log(`Selected Category: ${category}`);
+    };
+
     const navigateToHome = () => {
         navigation.navigate('Home');
     };
@@ -18,24 +27,28 @@ const Cashier = ({ navigation }) => {
     const styles = {
         container: {
             flex: 1,
-            backgroundColor: 'grey',
+            backgroundColor: '#cd4a30',
         },
         backButton: {
             marginTop: '10%',
-            marginLeft: '4%',
+            marginLeft: '2%',
         },
         body: {
-            padding: 20,
+            paddingTop: 10,
+            paddingRight: 10,
         },
         body_header: {
+            marginHorizontal: 23,
             flexDirection: 'row',
             justifyContent: 'space-between',
-            marginBottom: 20,
+            marginBottom: 2,
+            gap: 1,
         },
         button: {
             flex: 1,
             marginHorizontal: 5,
-            borderColor: '#BA2F2F'
+            borderColor: '#000000',
+            backgroundColor: '#f0a288',
         },
         body_top: {
             // Add styles as needed
@@ -56,30 +69,33 @@ const Cashier = ({ navigation }) => {
                         <Button 
                             mode="outlined" 
                             style={styles.button}
-                            labelStyle={{ color: '#BA2F2F' }}
+                            labelStyle={{ color: '#000000' }}
                             theme={{ colors: { primary: 'red' } }}
+                            onPress={() => Click_Category('All')}
                         >
                             All
                         </Button>
                         <Button 
                             mode="outlined" 
                             style={styles.button}
-                            labelStyle={{ color: '#BA2F2F' }}
+                            labelStyle={{ color: '#000000' }}
                             theme={{ colors: { primary: 'red' } }}
+                            onPress={() => Click_Category('Food')}
                         >
                             Food
                         </Button>
                         <Button 
                             mode="outlined" 
                             style={styles.button}
-                            labelStyle={{ color: '#BA2F2F' }}
+                            labelStyle={{ color: '#000000' }}
                             theme={{ colors: { primary: 'red' } }}
+                            onPress={() => Click_Category('Drinks')}
                         >
                             Drinks
                         </Button>
                     </View>
                     <View style={styles.body_top}>
-                        <Foods/> 
+                        <Foods category={selectedCategory}/> 
                     </View>
                     <View style={styles.body_bottom}>
                         <Text>Bottom</Text>

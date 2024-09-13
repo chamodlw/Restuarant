@@ -2,42 +2,59 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import axios from 'axios';
 
-const Foods = () => {
+const Foods = ({ category }) => {  // Destructure 'category' from props
     const [items, setItems] = useState([]);
 
     useEffect(() => {
         axios
             .get('http://10.10.27.146:3200/api/items')
             .then((response) => {
-                console.log('Fetched Data:', response.data); // Log the response data
-                setItems(response.data.response); // Access the 'response' field to get the items
+                console.log('Fetched Data: items');
+                setItems(response.data.response);
             })
             .catch((error) => {
                 console.error('Error fetching data:', error);
             });
     }, []);
 
-    useEffect(() => {
-        console.log('Items state updated:', items); // Log the updated state
-    }, [items]);
+    const getAvatarLetter = (name) => {
+        const words = name.split(' ');
+        if (words.length > 1) {
+            return words[0].charAt(0).toUpperCase() + words[1].charAt(0).toUpperCase();
+        }
+        return name.charAt(0).toUpperCase();
+    };
 
-    const renderItem = ({ item }) => (
-        <View style={styles.itemContainer}>
-            <Text style={styles.itemText}>ID: {item.id}</Text>
-            <Text style={styles.itemText}>Name: {item.name}</Text>
-            <Text style={styles.itemText}>Category: {item.category}</Text>
-            <Text style={styles.itemText}>Price: ${item.price}</Text>
-        </View>
-    );
+    const renderItem = ({ item }) => {
+        const avatarLetters = getAvatarLetter(item.name);
+        const avatarFontSize = avatarLetters.length === 1 ? 20 : 17; // Adjust font size based on number of letters
+
+        return (
+            <View style={styles.itemContainer}>
+                <View style={styles.avatar}>
+                    <Text style={[styles.avatarLetter, { fontSize: avatarFontSize }]}>
+                        {avatarLetters}
+                    </Text>
+                </View>
+                <View style={styles.textContainer}>
+                    <Text style={styles.itemText1}>{item.id}</Text>
+                    <Text style={styles.itemText2}>{item.name}</Text>
+                </View>
+            </View>
+        );
+    };
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Top Content</Text>
+            <Text style={styles.title}>
+                {typeof category === 'string' ? category : JSON.stringify(category)} Items
+            </Text>
             {items.length > 0 ? (
                 <FlatList
                     data={items}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={renderItem}
+                    numColumns={4} // Display 4 items in a single row
                 />
             ) : (
                 <Text style={styles.emptyText}>No items available</Text>
@@ -48,20 +65,48 @@ const Foods = () => {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 16,
+        padding: 10,
+        
     },
     title: {
         fontSize: 24,
-        marginBottom: 16,
+        marginBottom: 10,
+        textAlign: 'center',
     },
     itemContainer: {
-        marginBottom: 16,
-        padding: 16,
+        flex: 1,
+        margin: 5,
+        alignItems: 'center',
         backgroundColor: '#f9f9f9',
+        padding: 10,
         borderRadius: 8,
+        borderWidth: 1,
+        borderColor: 'black',
+        borderStyle: 'solid',
     },
-    itemText: {
-        fontSize: 18,
+    avatar: {
+        width: 35,
+        height: 35,
+        borderWidth: 1,
+        borderColor: 'black',
+        borderStyle: 'solid',
+        borderRadius: 30,
+        backgroundColor: '#BA2F2F',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    avatarLetter: {
+        color: 'white',
+        fontWeight: 'bold',
+    },
+    itemText1: {
+        fontSize: 10,
+        marginTop: 3,
+        textAlign: 'center',
+    },
+    itemText2: {
+        fontSize: 12,
+        textAlign: 'center',
     },
     emptyText: {
         fontSize: 18,
