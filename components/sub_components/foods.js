@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import axios from 'axios';
 
-const Foods = ({ category }) => {  // Destructure 'category' from props
+const Foods = ({ category }) => {
     const [items, setItems] = useState([]);
 
     useEffect(() => {
         axios
             .get('http://10.10.27.146:3200/api/items')
             .then((response) => {
-                console.log('Fetched Data: items');
+                console.log('Fetched Data:', response.data.response); // Log fetched data
                 setItems(response.data.response);
             })
             .catch((error) => {
@@ -44,14 +44,23 @@ const Foods = ({ category }) => {  // Destructure 'category' from props
         );
     };
 
+    // Map custom categories like 'Food' and 'Drinks' to actual categories like 'bun' and 'juice'
+    const filteredItems = category === 'All' 
+        ? items 
+        : category === 'Food' 
+        ? items.filter(item => item.category === 'bun') 
+        : category === 'Drinks' 
+        ? items.filter(item => item.category === 'juice') 
+        : items.filter(item => item.category === category); // Fallback for other categories
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>
-                {typeof category === 'string' ? category : JSON.stringify(category)} Items
+                {category === 'All' ? 'All Items' : `${category} Items`}
             </Text>
-            {items.length > 0 ? (
+            {filteredItems.length > 0 ? (
                 <FlatList
-                    data={items}
+                    data={filteredItems}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={renderItem}
                     numColumns={4} // Display 4 items in a single row
@@ -66,7 +75,6 @@ const Foods = ({ category }) => {  // Destructure 'category' from props
 const styles = StyleSheet.create({
     container: {
         padding: 10,
-        
     },
     title: {
         fontSize: 24,
