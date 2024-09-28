@@ -9,7 +9,7 @@ const Foods = ({ category }) => {
         axios
             .get('http://10.10.27.146:3200/api/items')
             .then((response) => {
-                console.log('Fetched Data:', response.data.response); // Log fetched data
+                console.log('Fetched Data'); // Log fetched data
                 setItems(response.data.response);
             })
             .catch((error) => {
