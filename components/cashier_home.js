@@ -34,7 +34,7 @@ const Cashier = ({ navigation }) => {
     const styles = {
         container: {
             flex: 1,
-            backgroundColor: '#cd4a30',
+            backgroundColor: '#650E0E',
         },
         backButton: {
             marginTop: '10%',
@@ -45,7 +45,7 @@ const Cashier = ({ navigation }) => {
             paddingRight: 10,
         },
         body_header: {
-            marginHorizontal: 23,
+            marginHorizontal: 15,
             flexDirection: 'row',
             justifyContent: 'space-between',
             marginBottom: 2,
@@ -54,12 +54,13 @@ const Cashier = ({ navigation }) => {
         button: {
             flex: 1,
             marginHorizontal: 5,
-            borderColor: '#000000',
+            borderColor: '#000000',  // Solid black border
+            borderWidth: 1.5,          // Thickness of the border
             backgroundColor: '#f0a288',
         },
         body_top: {},
         body_bottom: {
-            marginBottom: '8%',
+            marginBottom: '7%',
         },
     };
 
