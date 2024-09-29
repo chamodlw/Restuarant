@@ -1,61 +1,75 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useRef } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Linking } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import moment from 'moment';
-import { Image } from 'react-native';
+import { shareAsync } from 'expo-sharing';
+import ViewShot from 'react-native-view-shot';
 import img3 from '../../assets/bun-circled.png';
 
 const Invoice = () => {
     const route = useRoute();
     const { items, total } = route.params; // Get items and total from navigation params
+    const viewShotRef = useRef();
 
-    const printInvoice = () => {
-        alert('Invoice printed successfully!');
+    const handleShare = async () => {
+        try {
+            const uri = await viewShotRef.current.capture();
+            await shareAsync(uri, {
+                mimeType: 'image/jpeg',
+                dialogTitle: 'Share this invoice',
+                UTI: 'public.jpeg',
+            });
+        } catch (error) {
+            console.error("Error sharing screenshot:", error);
+        }
     };
+
     return (
-        <ScrollView 
-            style={styles.scrollContainer} 
+        <ScrollView
+            style={styles.scrollContainer}
             contentContainerStyle={styles.scrollContent}
             showsVerticalScrollIndicator={true} // Show scroll indicator
         >
-            <View style={styles.invoiceContainer}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
-                    <Image
-                        source={img3}
-                        style={{ width: 65, height: 65, marginRight: '5%', marginLeft: '3%' }}
-                    />
-                    <View>
-                        <Text style={styles.restaurantName}>Street Burger Hut</Text>
-                        <Text style={styles.addressText}>No.11/A, Colombo 07</Text>
-                        <Text style={styles.phoneText}>Phone: +94 76 261 9592</Text>
-                    </View>
-                </View>
-                <Text style={styles.dateText}>Date: {moment().format('Do MMMM YYYY')}</Text>
-                <Text style={styles.dateText}>Time: {moment().format('h:mm:ss a')}</Text>
-
-                <View style={styles.tableHeader}>
-                    <Text style={{fontSize: 16, fontWeight: 'bold', color: 'black', flex: 0.5, marginLeft:4}}>Item</Text>
-                    <Text style={styles.tableHeaderText}>Price (Rs.)</Text>
-                    <Text style={styles.tableHeaderText}>Qty</Text>
-                    <Text style={styles.tableHeaderText}>Total (Rs.)</Text>
-                </View>
-
-                <View style={styles.invoiceDetails}>
-                    {items.map((item, index) => (
-                        <View key={index} style={styles.itemRow}>
-                            <Text style={{fontSize: 16, color: 'black', flex: 0.5}}>{item.name}</Text>
-                            <Text style={{fontSize: 16, color: 'black', flex: 0.3}}>{item.price}</Text>
-                            <Text style={{fontSize: 16, color: 'black', flex: 0.3}}>{item.quantity}</Text>
-                            <Text style={styles.tableCell}>{item.quantity * item.price}</Text>
+            <ViewShot ref={viewShotRef} options={{ format: 'jpg', quality: 1 }}>
+                <View style={styles.invoiceContainer}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+                        <Image
+                            source={img3}
+                            style={{ width: 65, height: 65, marginRight: '5%', marginLeft: '3%' }}
+                        />
+                        <View>
+                            <Text style={styles.restaurantName}>Street Burger Hut</Text>
+                            <Text style={styles.addressText}>No.11/A, Colombo 07</Text>
+                            <Text style={styles.phoneText}>Phone: +94 76 261 9592</Text>
                         </View>
-                    ))}
-                </View>
+                    </View>
+                    <Text style={styles.dateText}>Date: {moment().format('Do MMMM YYYY')}</Text>
+                    <Text style={styles.dateText}>Time: {moment().format('h:mm:ss a')}</Text>
 
-                <Text style={styles.totalText}>Total: Rs. {total}</Text>
-            </View>
-            <View>
-                <TouchableOpacity style={styles.submitButton} onPress={printInvoice}>
-                    <Text style={styles.submitButtonText}>Print Invoice</Text>
+                    <View style={styles.tableHeader}>
+                        <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'black', flex: 0.5, marginLeft: 4 }}>Item</Text>
+                        <Text style={styles.tableHeaderText}>Price (Rs.)</Text>
+                        <Text style={styles.tableHeaderText}>Qty</Text>
+                        <Text style={styles.tableHeaderText}>Total (Rs.)</Text>
+                    </View>
+
+                    <View style={styles.invoiceDetails}>
+                        {items.map((item, index) => (
+                            <View key={index} style={styles.itemRow}>
+                                <Text style={{ fontSize: 16, color: 'black', flex: 0.5 }}>{item.name}</Text>
+                                <Text style={{ fontSize: 16, color: 'black', flex: 0.3 }}>{item.price}</Text>
+                                <Text style={{ fontSize: 16, color: 'black', flex: 0.3 }}>{item.quantity}</Text>
+                                <Text style={styles.tableCell}>{item.quantity * item.price}</Text>
+                            </View>
+                        ))}
+                    </View>
+
+                    <Text style={styles.totalText}>Total: Rs. {total}</Text>
+                </View>
+            </ViewShot>
+            <View style={styles.buttonContainer}>
+                <TouchableOpacity style={styles.submitButton} onPress={handleShare}>
+                    <Text style={styles.submitButtonText}>Print/Share Invoice</Text>
                 </TouchableOpacity>
             </View>
         </ScrollView>
@@ -68,8 +82,9 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         padding: 8,
         alignItems: 'center',
-        marginVertical: 20,
+        marginVertical: 10,
         marginHorizontal: 2,
+        width: '100%',
     },
     submitButtonText: {
         color: 'black',
@@ -106,6 +121,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     dateText: {
+        marginLeft: '3%',
         fontSize: 16,
         color: '#e64a19',
         marginBottom: '1%',
@@ -117,7 +133,7 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         paddingHorizontal: 5,
         marginBottom: 5,
-        marginTop: 5,
+        marginTop: 10,
     },
     tableHeaderText: {
         fontSize: 16,
@@ -147,6 +163,10 @@ const styles = StyleSheet.create({
         marginTop: 15,
         marginRight: 8,
         textAlign: 'right',
+    },
+    buttonContainer: {
+        alignItems: 'center',
+        marginBottom: 20,
     },
 });
 
