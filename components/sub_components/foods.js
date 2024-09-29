@@ -70,7 +70,7 @@ const Foods = ({ category, onItemPress }) => {
                     numColumns={4}
                 />
             ) : (
-                <Text style={styles.emptyText}>No items available</Text>
+                <Text style={styles.emptyText}></Text>
             )}
         </View>
     );
