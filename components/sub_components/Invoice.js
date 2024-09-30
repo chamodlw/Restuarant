@@ -1,17 +1,30 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Linking } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import moment from 'moment';
 import { shareAsync } from 'expo-sharing';
 import ViewShot from 'react-native-view-shot';
 import img3 from '../../assets/bun-circled.png';
+import axios from 'axios';
 
 const Invoice = () => {
     const route = useRoute();
     const { items, total } = route.params; // Get items and total from navigation params
     const viewShotRef = useRef();
 
+    useEffect(() => {
+        axios
+            .get('http://10.10.27.146:3200/api/billundermaxid')
+            .then((response) => {
+                console.log('max id: '+ response.data.response);
+            })
+            .catch((error) => {
+                console.error('Error fetching data:', error);
+            });
+    }, []);
+
     const handleShare = async () => {
+        
         try {
             const uri = await viewShotRef.current.capture();
             await shareAsync(uri, {
@@ -47,7 +60,7 @@ const Invoice = () => {
                     <Text style={styles.dateText}>Time: {moment().format('h:mm:ss a')}</Text>
 
                     <View style={styles.tableHeader}>
-                        <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'black', flex: 0.5, marginLeft: 4 }}>Item</Text>
+                        <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'black', flex: 0.5, marginLeft: 6 }}>Item</Text>
                         <Text style={styles.tableHeaderText}>Price (Rs.)</Text>
                         <Text style={styles.tableHeaderText}>Qty</Text>
                         <Text style={styles.tableHeaderText}>Total (Rs.)</Text>
@@ -56,7 +69,7 @@ const Invoice = () => {
                     <View style={styles.invoiceDetails}>
                         {items.map((item, index) => (
                             <View key={index} style={styles.itemRow}>
-                                <Text style={{ fontSize: 16, color: 'black', flex: 0.5 }}>{item.name}</Text>
+                                <Text style={{ fontSize: 16, color: 'black', flex: 0.5 ,marginLeft:4}}>{item.name}</Text>
                                 <Text style={{ fontSize: 16, color: 'black', flex: 0.3 }}>{item.price}</Text>
                                 <Text style={{ fontSize: 16, color: 'black', flex: 0.3 }}>{item.quantity}</Text>
                                 <Text style={styles.tableCell}>{item.quantity * item.price}</Text>
