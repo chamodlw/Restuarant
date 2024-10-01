@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Linking } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import moment from 'moment';
@@ -11,31 +11,60 @@ const Invoice = () => {
     const route = useRoute();
     const { items, total } = route.params; // Get items and total from navigation params
     const viewShotRef = useRef();
+    const [id, setId] = useState([]);
 
     useEffect(() => {
         axios
             .get('http://10.10.27.146:3200/api/billundermaxid')
             .then((response) => {
-                console.log('max id: '+ response.data.response);
+                const billId = response.data.response.id; // Extract the 'id' field
+                setId(billId + 1);
+                console.log('max id:', billId);  // Display the 'id' only
             })
             .catch((error) => {
                 console.error('Error fetching data:', error);
             });
     }, []);
+    
 
     const handleShare = async () => {
-        
         try {
+            // Capture the screenshot
             const uri = await viewShotRef.current.capture();
+            
+            // Data to be sent to the database
+            const billData = {
+                id: id, // Bill ID
+                date_time: new Date().toISOString(), // Current date and time
+                items: items.map(item => ({
+                    id: item.id,
+                    name: item.name,
+                    price: item.price,
+                    quantity: item.quantity,
+                })),
+                total: total, // Total price
+            };
+            
+            // POST request to save the bill data
+            await axios.post('http://10.10.27.146:3200/api/addbill', billData)
+                .then((response) => {
+                    console.log('Bill added successfully:', id);   
+                })
+                .catch((error) => {
+                    console.error('Error adding bill:', error);
+                });
+    
+            // Share the captured image
             await shareAsync(uri, {
                 mimeType: 'image/jpeg',
                 dialogTitle: 'Share this invoice',
                 UTI: 'public.jpeg',
             });
         } catch (error) {
-            console.error("Error sharing screenshot:", error);
+            console.error("Error sharing screenshot or saving bill:", error);
         }
     };
+    
 
     return (
         <ScrollView
@@ -56,6 +85,7 @@ const Invoice = () => {
                             <Text style={styles.phoneText}>Phone: +94 76 261 9592</Text>
                         </View>
                     </View>
+                    <Text style={styles.dateText}>Invoice No: SBH-{id}</Text>
                     <Text style={styles.dateText}>Date: {moment().format('Do MMMM YYYY')}</Text>
                     <Text style={styles.dateText}>Time: {moment().format('h:mm:ss a')}</Text>
 
