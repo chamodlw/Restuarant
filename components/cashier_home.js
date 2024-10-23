@@ -25,6 +25,10 @@ const Cashier = ({ navigation }) => {
         navigation.navigate('Home');
     };
 
+    const otherFeatures = () => {
+        navigation.navigate('Features');
+    };
+
     React.useLayoutEffect(() => {
         navigation.setOptions({
             headerShown: false,
@@ -67,9 +71,14 @@ const Cashier = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <View style={styles.backButton}>
-                <TouchableOpacity onPress={navigateToHome}>
-                    <Icon name="arrow-back-circle" size={35} color="black" style={{ marginLeft: '3%' }} />
-                </TouchableOpacity>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: '3%' }}>
+                    <TouchableOpacity onPress={navigateToHome}>
+                        <Icon name="arrow-back-circle" size={35} color="black" />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={otherFeatures}>
+                        <Icon name="settings" size={32} color="black" />
+                    </TouchableOpacity>
+                </View>
                 <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
                     <View style={styles.body}>
                         <View style={styles.body_header}>

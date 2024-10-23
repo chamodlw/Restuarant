@@ -6,6 +6,9 @@ import CustomerH from './components/customer_home';  // Replace with your actual
 import CashierH from './components/cashier_home';  // Replace with your actual component
 import OwnerH from './components/owner_home';  // Replace with your actual component
 import Invoice from './components/sub_components/Invoice';  // Replace with your actual component
+import Features from './components/sub_components/features';  // Replace with your actual component
+import Reports from './components/sub_components/reports';  // Replace with your actual component
+import Invoices from './components/sub_components/invoices';  // Replace with your actual component
 
 const Stack = createStackNavigator();
 
@@ -18,6 +21,9 @@ const App = () => {
                 <Stack.Screen name="CashierH" component={CashierH} />
                 <Stack.Screen name="OwnerH" component={OwnerH} />
                 <Stack.Screen name="Invoice" component={Invoice} />
+                <Stack.Screen name="Features" component={Features} />
+                <Stack.Screen name="Reports" component={Reports} />
+                <Stack.Screen name="Invoices" component={Invoices} />
             </Stack.Navigator>
         </NavigationContainer>
     );
