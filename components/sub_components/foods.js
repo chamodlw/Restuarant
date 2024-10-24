@@ -7,7 +7,7 @@ const Foods = ({ category, onItemPress }) => {
 
     useEffect(() => {
         axios
-            .get('http://10.10.10.119:3200/api/items')
+            .get('http://192.168.242.44:3200/api/items')
             .then((response) => {
                 console.log('Fetched Data');
                 setItems(response.data.response);
