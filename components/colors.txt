@@ -1,0 +1,5 @@
+black
+#650E0E
+#BA2F2F
+#f0a288
+white

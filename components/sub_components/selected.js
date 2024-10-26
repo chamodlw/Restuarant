@@ -82,7 +82,7 @@ const Selected = ({ selectedItem }) => {
             <PaperProvider>
                 <View style={styles.container}>
                     {items.length > 0 ? (
-                        <DataTable>
+                        <DataTable style={styles.table}> 
                             <DataTable.Header style={styles.header}>
                                 <DataTable.Title style={{ flex: 0.8 }}>
                                     <Text style={styles.headertext}>ID</Text>
@@ -174,20 +174,22 @@ const styles = StyleSheet.create({
         textShadowRadius: 1,
     },
     container: {
-        backgroundColor: 'white',
         height: 'auto',
         justifyContent: 'center',
         marginTop: 10,
         marginHorizontal: 15,
-        borderRadius: 10,
-        borderWidth: 1,
-        borderColor: 'black',
-        borderStyle: 'solid',
+        
     },
     headertext: {
         color: 'black',
         fontSize: 18,
         fontWeight: 'bold'
+    },
+    table: {
+        backgroundColor: 'white',
+        borderWidth: 1,
+        borderColor: 'black',
+        borderStyle: 'solid',
     },
     header: {
         minHeight: 50,
@@ -222,13 +224,21 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     quantityText: {
+        
         fontSize: 15,
         fontWeight: 'bold',
     },
     emptyimg: {
+        paddingVertical: 20,
+        backgroundColor: 'white',
+        marginHorizontal: '10%',
         alignItems: 'center', 
         marginTop: 30,
         marginBottom: 30,
+        borderRadius: 300,
+        borderWidth: 1,
+        borderColor: 'black',
+        borderStyle: 'solid',
     },
     totalRow: {
         backgroundColor: '#ddd',

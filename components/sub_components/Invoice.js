@@ -15,7 +15,7 @@ const Invoice = () => {
 
     useEffect(() => {
         axios
-            .get('http://192.168.242.44:3200/api/billundermaxid')
+            .get('http://192.168.38.44:3200/api/billundermaxid')
             .then((response) => {
                 const billId = response.data.response.id; // Extract the 'id' field
                 setId(billId + 1);
@@ -35,7 +35,7 @@ const Invoice = () => {
             // Data to be sent to the database
             const billData = {
                 id: id, // Bill ID
-                date_time: new Date().toISOString(), // Current date and time
+                date_time: new Date(), // Current date and time
                 items: items.map(item => ({
                     id: item.id,
                     name: item.name,
@@ -46,7 +46,7 @@ const Invoice = () => {
             };
             
             // POST request to save the bill data
-            await axios.post('http://192.168.242.44:3200/api/addbill', billData)
+            await axios.post('http://192.168.38.44:3200/api/addbill', billData)
                 .then((response) => {
                     console.log('Bill added successfully:', id);   
                 })

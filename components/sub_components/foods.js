@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Pressable } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Pressable } from 'react-native';
 import axios from 'axios';
 
 const Foods = ({ category, onItemPress }) => {
@@ -7,7 +7,7 @@ const Foods = ({ category, onItemPress }) => {
 
     useEffect(() => {
         axios
-            .get('http://192.168.242.44:3200/api/items')
+            .get('http://192.168.38.44:3200/api/items')
             .then((response) => {
                 console.log('Fetched Data');
                 setItems(response.data.response);
@@ -30,25 +30,6 @@ const Foods = ({ category, onItemPress }) => {
         onItemPress(item); // Pass the clicked item to parent
     };
 
-    const renderItem = ({ item }) => {
-        const avatarLetters = getAvatarLetter(item.name);
-        const avatarFontSize = avatarLetters.length === 1 ? 20 : 17;
-
-        return (
-            <Pressable style={styles.itemContainer} onPress={() => handleItemPress(item)}>
-                <View style={styles.avatar}>
-                    <Text style={[styles.avatarLetter, { fontSize: avatarFontSize }]}>
-                        {avatarLetters}
-                    </Text>
-                </View>
-                <View style={styles.textContainer}>
-                    <Text style={styles.itemText1}>{item.id}</Text>
-                    <Text style={styles.itemText2}>{item.name}</Text>
-                </View>
-            </Pressable>
-        );
-    };
-
     const filteredItems = category === 'All' 
         ? items 
         : category === 'Food' 
@@ -63,14 +44,35 @@ const Foods = ({ category, onItemPress }) => {
                 {category === 'All' ? 'All Items' : `${category} Items`}
             </Text>
             {filteredItems.length > 0 ? (
-                <FlatList
-                    data={filteredItems}
-                    keyExtractor={(item) => item.id.toString()}
-                    renderItem={renderItem}
-                    numColumns={4}
-                />
+                <ScrollView>
+                    {filteredItems.reduce((rows, item, index) => {
+                        if (index % 3 === 0) rows.push([]); // Start a new row
+                        rows[rows.length - 1].push(
+                            <Pressable 
+                                key={item.id.toString()} 
+                                style={styles.itemContainer} 
+                                onPress={() => handleItemPress(item)}
+                            >
+                                <View style={styles.avatar}>
+                                    <Text style={styles.avatarLetter}>
+                                        {getAvatarLetter(item.name)}
+                                    </Text>
+                                </View>
+                                <View style={styles.textContainer}>
+                                    <Text style={styles.itemText1}>{item.name.includes(' ') ? item.name.split(' ').join('\n') : item.name}</Text>
+                                    <Text style={styles.itemText2}>{item.price}/=</Text>
+                                </View>
+                            </Pressable>
+                        );
+                        return rows;
+                    }, []).map((row, rowIndex) => (
+                        <View key={rowIndex} style={[styles.rowContainer, row.length < 3 && styles.centerRow]}>
+                            {row}
+                        </View>
+                    ))}
+                </ScrollView>
             ) : (
-                <Text style={styles.emptyText}></Text>
+                <Text style={styles.emptyText}>Street Burger Hut</Text>
             )}
         </View>
     );
@@ -88,19 +90,30 @@ const styles = StyleSheet.create({
         fontFamily: 'monospace',
         fontWeight: 'bold',
     },
+    rowContainer: {
+        flexDirection: 'row', // Set to row for horizontal layout
+        justifyContent: 'space-between', // Space out items evenly
+        marginBottom: 10, // Add margin for spacing between rows
+    },
+    centerRow: {
+        justifyContent: 'center', // Center align if less than 3 items
+        gap: 20, // Add gap between items
+        
+    },
     itemContainer: {
-        flex: 1,
-        margin: 5,
+        width: '30%', // Set to 30% to fit three items in a row
+        flexDirection: 'row', // Ensure items are laid out in a row
         alignItems: 'center',
         backgroundColor: '#f9f9f9',
-        padding: 10,
+        paddingHorizontal: 10,
+        paddingVertical: 8,
         borderRadius: 8,
         borderWidth: 1,
         borderColor: 'black',
     },
     avatar: {
-        width: 35,
-        height: 35,
+        width: 28,
+        height: 28,
         borderWidth: 1,
         borderColor: 'black',
         borderRadius: 30,
@@ -111,15 +124,16 @@ const styles = StyleSheet.create({
     avatarLetter: {
         color: 'white',
         fontWeight: 'bold',
+        fontSize: 15, // Default size
+    },
+    textContainer: {
+        marginLeft: 10, // Add margin for spacing
     },
     itemText1: {
-        fontSize: 10,
-        marginTop: 3,
-        textAlign: 'center',
+        fontSize: 9,
     },
     itemText2: {
         fontSize: 12,
-        textAlign: 'center',
     },
     emptyText: {
         fontSize: 18,
