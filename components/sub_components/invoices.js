@@ -1,10 +1,16 @@
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
+import { min } from 'moment';
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const Invoices = () => {
+    const convertToIST = (timeString) => {
+        const gmtDate = new Date(timeString); // Parse the GMT time
+        return gmtDate.toLocaleString('en-GB', { timeZone: 'Asia/Kolkata', hour12: false }); // Format in IST timezone in HH:mm:ss
+    };
+    
     const navigation = useNavigation();
     const [selectedOption, setSelectedOption] = useState('ALL');
     const [bills, setBills] = useState([]);
@@ -41,37 +47,39 @@ const Invoices = () => {
     };
 
     const AllInvoicesContent = () => (
-    <View>
-        {bills.map((item) => {
-            // Split the date_time into date and time
-            const [date, time] = item.date_time.split(' '); // Adjust this split based on your date_time format
-
-            return (
-                <View key={item.id} style={styles.billCard}>
-                    <View style={styles.billHeader}>
-                        <Text style={styles.billIdText}>Invoice Num: {item.id}</Text>
-                        <Text style={styles.billTotalText}>Total: {item.total}/=</Text>
-                        <TouchableOpacity onPress={() => toggleBillDetails(item.id)}>
-                            <Icon name={expandedBillId === item.id ? "chevron-up" : "chevron-down"} size={24} color="black" />
-                        </TouchableOpacity>
-                    </View>
-                    {expandedBillId === item.id && (
-                        <View style={styles.billDetails}>
-                            <Text>Date: {date}</Text>
-                            <Text>Time: {time}</Text>
-                            {item.items.map((subItem) => (
-                                <Text key={subItem.id}>
-                                    {subItem.name} - {subItem.price}/= x {subItem.quantity}
-                                </Text>
-                            ))}
+        <View>
+            {bills.map((item) => {
+                const istDateTime = convertToIST(item.date_time);
+                const [date, istTime] = istDateTime.split(', ');
+    
+                return (
+                    <View key={item.id} style={styles.billCard}>
+                        <View style={styles.billHeader}>
+                            <Text style={styles.billIdText}>Invoice Num: {item.id}</Text>
+                            <View style={{ flexDirection: 'row' }}>
+                                <Text style={styles.billTotalText}>Rs.{item.total}/--</Text>
+                            </View>
+                            <TouchableOpacity onPress={() => toggleBillDetails(item.id)}>
+                                <Icon name={expandedBillId === item.id ? "chevron-up" : "chevron-down"} size={24} color="black" />
+                            </TouchableOpacity>
                         </View>
-                    )}
-                </View>
-            );
-        })}
-    </View>
-);
-
+                        {expandedBillId === item.id && (
+                            <View style={styles.billDetails}>
+                                <Text style={styles.miniTimeDate}>Date: {date}</Text>
+                                <Text style={styles.miniTimeDate}>Time: {istTime}</Text>
+                                {item.items.map((subItem) => (
+                                    <Text key={subItem.id}>
+                                        • {subItem.name} - {subItem.price}/= x {subItem.quantity}
+                                    </Text>
+                                ))}
+                            </View>
+                        )}
+                    </View>
+                );
+                
+            })}
+        </View>
+    );
 
     const FilteredInvoicesContent = () => (
         <Text>Filtered Invoices Content</Text>
@@ -177,6 +185,12 @@ const styles = StyleSheet.create({
     contentContainer: {
         marginTop: 20,
     },
+    miniTimeDate: {
+        fontSize: 15,
+        color: 'gray',
+        marginBottom: 5,
+    },
+
     billCard: {
         backgroundColor: '#ffffff',
         padding: 15,
@@ -195,7 +209,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     billTotalText: {
-        fontSize: 16,
+        fontSize: 15,
     },
     billDetails: {
         marginTop: 10,
