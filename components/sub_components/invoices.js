@@ -32,7 +32,7 @@ const Invoices = () => {
 
     useEffect(() => {
         axios
-            .get(`http://192.168.38.44:3200/api/bills/${getCurrentYear()}`)
+            .get(`http://192.168.101.44:3200/api/bills/${getCurrentYear()}`)
             .then((response) => {
                 console.log('Fetched Data:', response.data.response);
                 setBills(response.data.response);

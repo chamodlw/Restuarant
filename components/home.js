@@ -34,7 +34,7 @@ const Home = () => {
     
         if (screenToNavigate === 'Cashier' && password === 'As') {
             isValid = true;
-        } else if (screenToNavigate === 'Owner' && username === 'chamod' && password === '9090') {
+        } else if (screenToNavigate === 'Owner' && username === 'As' && password === 'As') {
             isValid = true;
         } else {
             alert('Invalid credentials');

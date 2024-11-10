@@ -1,18 +1,44 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { View, ActivityIndicator } from 'react-native';
+import * as Font from 'expo-font';
+import { Ionicons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+
 import Home from './components/home';
-import CustomerH from './components/customer_home';  // Replace with your actual component
-import CashierH from './components/cashier_home';  // Replace with your actual component
-import OwnerH from './components/owner_home';  // Replace with your actual component
-import Invoice from './components/sub_components/Invoice';  // Replace with your actual component
-import Features from './components/sub_components/features';  // Replace with your actual component
-import Reports from './components/sub_components/reports';  // Replace with your actual component
-import Invoices from './components/sub_components/invoices';  // Replace with your actual component
+import CustomerH from './components/customer_home';
+import CashierH from './components/cashier_home';
+import OwnerH from './components/owner_home';
+import Invoice from './components/sub_components/Invoice';
+import Features from './components/sub_components/features';
+import Reports from './components/sub_components/reports';
+import Invoices from './components/sub_components/invoices';
 
 const Stack = createStackNavigator();
 
 const App = () => {
+    const [fontLoaded, setFontLoaded] = useState(false);
+
+    // Load fonts asynchronously
+    useEffect(() => {
+        async function loadFonts() {
+            await Font.loadAsync({
+                ...Ionicons.font,
+            });
+            setFontLoaded(true);
+        }
+        loadFonts();
+    }, []);
+
+    if (!fontLoaded) {
+        // Display a loading indicator until fonts are loaded
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size="large" />
+            </View>
+        );
+    }
+
     return (
         <NavigationContainer>
             <Stack.Navigator initialRouteName="Home">
