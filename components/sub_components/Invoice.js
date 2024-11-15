@@ -15,7 +15,7 @@ const Invoice = () => {
 
     useEffect(() => {
         axios
-            .get('http://192.168.101.44:3200/api/billundermaxid')
+            .get('http://192.168.45.44:3200/api/billundermaxid')
             .then((response) => {
                 const billId = response.data.response.id; // Extract the 'id' field
                 setId(billId + 1);
@@ -46,7 +46,7 @@ const Invoice = () => {
             };
             
             // POST request to save the bill data
-            await axios.post('http://192.168.101.44:3200/api/addbill', billData)
+            await axios.post('http://192.168.45.44:3200/api/addbill', billData)
                 .then((response) => {
                     console.log('Bill added successfully:', id);   
                 })
