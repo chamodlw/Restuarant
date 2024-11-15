@@ -4,9 +4,9 @@ import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const Invoices = () => {
+const Reports = () => {
     const navigation = useNavigation();
-    const [selectedOption, setSelectedOption] = useState('ALL');
+    const [selectedOption, setSelectedOption] = useState('Date');
     const navigateToFeatures = () => {
         navigation.navigate('Features');
     };
@@ -17,15 +17,27 @@ const Invoices = () => {
         });
     }, [navigation]);
 
-    const AllInvoicesContent = () => (
+    const DateReportsContent = () => (
         <View>
-            <Text>All Invoices Content</Text>
+            <Text>Date Reports Content</Text>
         </View>
     );
 
-    const FilteredInvoicesContent = () => (
+    const MonthReportsContent = () => (
         <View>
-            <Text>Filtered Invoices Content</Text>
+            <Text>Month Reports Content</Text>
+        </View>
+    );
+
+    const YearReportsContent = () => (
+        <View>
+            <Text>Year Reports Content</Text>
+        </View>
+    );
+
+    const CustomReportsContent = () => (
+        <View>
+            <Text>Custom Reports Content</Text>
         </View>
     );
 
@@ -45,32 +57,54 @@ const Invoices = () => {
                     <TouchableOpacity
                         style={[
                             styles.switchOption,
-                            selectedOption === 'ALL' && styles.activeOption,
+                            selectedOption === 'Date' && styles.activeOption,
                         ]}
-                        onPress={() => setSelectedOption('ALL')}
+                        onPress={() => setSelectedOption('Date')}
                     >
-                        <Text style={styles.switchText}>ALL INVOICES</Text>
+                        <Text style={styles.switchText}>DATE</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={[
                             styles.switchOption,
-                            selectedOption === 'FILTER' && styles.activeOption,
+                            selectedOption === 'Month' && styles.activeOption,
                         ]}
-                        onPress={() => setSelectedOption('FILTER')}
+                        onPress={() => setSelectedOption('Month')}
                     >
-                        <Text style={styles.switchText}>FILTER BY DATE</Text>
+                        <Text style={styles.switchText}>MONTH</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[
+                            styles.switchOption,
+                            selectedOption === 'Year' && styles.activeOption,
+                        ]}
+                        onPress={() => setSelectedOption('Year')}
+                    >
+                        <Text style={styles.switchText}>YEAR</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[
+                            styles.switchOption,
+                            selectedOption === 'Custom' && styles.activeOption,
+                        ]}
+                        onPress={() => setSelectedOption('Custom')}
+                    >
+                        <Text style={styles.switchText}>CUSTOM</Text>
                     </TouchableOpacity>
                 </View>
                 
                 <View style={styles.contentContainer}>
                     <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
-                        {selectedOption === 'ALL' ? <AllInvoicesContent /> : <FilteredInvoicesContent />}
+                        {selectedOption === 'Date' && <DateReportsContent />}
+                        {selectedOption === 'Month' && <MonthReportsContent />}
+                        {selectedOption === 'Year' && <YearReportsContent />}
+                        {selectedOption === 'Custom' && <CustomReportsContent />}
                     </ScrollView>
                 </View>
             </View>
         </View>
     );
 };
+
 
 const styles = StyleSheet.create({
     container: {
@@ -131,4 +165,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Invoices;
+export default Reports;
