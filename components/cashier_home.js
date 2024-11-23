@@ -96,18 +96,18 @@ const Cashier = ({ navigation }) => {
                                 style={styles.button}
                                 labelStyle={{ color: '#000000' }}
                                 theme={{ colors: { primary: 'red' } }}
-                                onPress={() => Click_Category('Food')}
+                                onPress={() => Click_Category('mini')}
                             >
-                                Food
+                                MINI
                             </Button>
                             <Button
                                 mode="outlined"
                                 style={styles.button}
                                 labelStyle={{ color: '#000000' }}
                                 theme={{ colors: { primary: 'red' } }}
-                                onPress={() => Click_Category('Drinks')}
+                                onPress={() => Click_Category('W & S')}
                             >
-                                Drinks
+                                W & S
                             </Button>
                         </View>
                         <View style={styles.body_top}>
